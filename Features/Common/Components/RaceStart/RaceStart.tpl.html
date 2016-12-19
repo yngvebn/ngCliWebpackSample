@@ -1,0 +1,16 @@
+﻿<span *ngIf="showCountdown">
+    <span class="expect-start">Start om </span>
+    <span class="countdown inline" ng-class="{ 'final-countdown' : race.secondsToStart <= 600 }">
+        <span class="countdown__mmss">
+            <span class="countdown__digits">{{minutes}}</span><span class="time-sep">:</span><span class="countdown__digits seconds">{{seconds}}</span>
+        </span>
+    </span>
+</span>
+
+<span *ngIf="race && !race.hasBeenMoved">
+    <span *ngIf="!showCountdown">Start&nbsp;{{race.displayStartTime}}</span>
+</span>
+
+<span *ngIf="race && race.hasBeenMoved">
+    <span *ngIf="!showCountdown">Utsatt til&nbsp;{{race.displayStartTime}}</span>
+</span>

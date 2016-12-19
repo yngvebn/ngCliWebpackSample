@@ -1,0 +1,8 @@
+﻿<div (click)="openRowPriceDialog()" class="bet-cost-sm__rowprice-selector">
+    <div class="u-text-smallest">Rekkepris:</div>
+    <strong class="bet-cost-sm__select">{{selectedPriceInfo.value | kroner : true : 2 : true}}</strong>
+</div>
+<div class="bet-cost-sm__sum">
+    <div class="u-text-smallest"><span *ngFor="let mark of getMarks();let i = index;trackBy index"> {{i == 0 ? mark : 'x ' + mark}}</span></div>
+    <div><strong class="amount">{{getEstimatedPrice() | kroner : false : 2}}</strong><span class="u-text-smallest" ng-if="includeFee">(inkl. avgift)</span></div>
+</div>

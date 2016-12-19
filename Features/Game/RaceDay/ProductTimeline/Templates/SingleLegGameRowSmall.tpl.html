@@ -1,0 +1,79 @@
+﻿<!-- Element unopened -->
+<div class="products-list__header" ng-class="{'is-collapsed-REMOVE-THIS-TO-USE-EXPANDER': ctrl.expandedSingleLegGames[productForTimeline.product] }">
+    <div class="products-list__action" ng-class="::['product__title__'+productForTimeline.product, { 'product__title__gallop': ctrl.selectedRaceDay.sportType === 'G' } ]">
+        <button class="btn btn--small btn--support u-display-block" ui-sref="game.raceDay.product({ product: productForTimeline.product})">{{::productForTimeline.product | presentProductAsShortText}}</button>
+    </div>
+    <div ng-click="ctrl.toggleExpandRaces(productForTimeline)" class="products-list__expandbtn products-list__details">
+        <div class="products-list__time" ng-if="ctrl.nextGameStartOnRace[productForTimeline.product]">
+            {{ ctrl.nextGameStartOnRace[productForTimeline.product].displayStartTime | amDateFormat:'HH:mm' }}
+        </div>
+        <div class="products-list__racenumbers" ng-if="ctrl.nextGameStartOnRace[productForTimeline.product]">
+            {{ ctrl.nextGameStartOnRace[productForTimeline.product].raceNumber }}
+        </div>
+        <div class="products-list__revenue">
+            <span ng-if="productForTimeline.races.length === 1" class="product-list__revenue">{{productForTimeline.races[0].totalInvestment[productForTimeline.product] | kroner : true : false }}</span>
+        </div>
+        <div class="products-list__expander u-text-center">
+            <button class="btn btn--transparent u-display-block" ng-if="productForTimeline.races.length > 1"><icon icon="down" icon-color="neutral-light" icon-size="small"></icon></button>
+        </div>
+    </div>
+</div>
+
+<div class="products-list--singleleg" ng-class="{'is-expanded-REMOVE-THIS-TO-USE-EXPANDER': ctrl.expandedSingleLegGames[productForTimeline.product]}">
+    
+    <div class="products-list__title u-display-flex" ng-click="ctrl.toggleExpandRaces(productForTimeline)">
+        <h3>Trippel</h3>
+        <div class="products-list__expander u-text-center">
+            <button class="btn btn--transparent"><icon icon="up" icon-color="neutral" icon-size="medium"></icon></button>
+        </div>
+    </div>
+
+    <div class="products-list__row products-list__listhead">
+        <div class="products-list__action u-text-center">Løp</div>
+        <div class="products-list__time">Start</div>
+        <div class="products-list__revenue">Omsetning</div>
+        <div class="products-list__expander"></div>
+    </div>
+
+    <div ng-repeat="race in ctrl.productsForRaceDay.races track by race.raceNumber" ng-class="['is-'+race.progressStatus.toLowerCase(), ctrl.hasSingleLegGame(race.raceNumber, productForTimeline) ? 'is-singleleg' : 'is-empty', { 'is-moved': race.hasBeenMoved}]" class="products-list__row">
+
+        <div ng-repeat-start="singleLegGame in [ctrl.getSingleLegGameRace(race.raceNumber, productForTimeline)]" class="products-list__action u-text-right">
+            <button href="#" class="btn btn--support btn--small" ng-if="::singleLegGame" ng-disabled="race.progressStatus !== 'Future'" ng-class="::{'is-super' : singleLegGame.isSuper}">
+                <span ng-if="!singleLegGame.isSuper"> {{::singleLegGame.raceNumber}}</span>
+                <strong ng-if="singleLegGame.isSuper" ng-class="{'u-text-highlight': singleLegGame.hasJackpot}">S</strong>
+            </button>
+        </div>
+
+        <div ng-switch="race.progressStatus" class="products-list__time">
+            <span ng-switch-when="Future">
+                <countdown to="race.startTime" show-countdown="race.showCountdown"></countdown>
+                <span ng-if="!race.hasBeenMoved">
+                    <span ng-if="!race.showCountdown">{{race.displayStartTime}}</span>
+                </span>
+                <span ng-if="race.hasBeenMoved">
+                    <span ng-if="!race.showCountdown">{{race.startTime |  amDateFormat:'HH:mm'}} <span class="u-text-error">Utsatt</span></span>
+                </span>
+            </span>
+            <span ng-switch-when="Ongoing">Pågår!</span>
+            <span ng-switch-when="Abandoned">Avlyst!</span>
+        </div>
+
+        <div class="products-list__revenue" ng-repeat-end>
+            <strong ng-if="singleLegGame.isSuper">Supertrippel</strong>
+            <strong ng-if="singleLegGame.hasBonus">Bonus</strong>
+            <span ng-if="singleLegGame.hasJackpot && singleLegGame.hasBonus"> og </span>
+            <strong ng-if="singleLegGame.hasJackpot">Jackpot</strong>
+            <span ng-if="singleLegGame.totalInvestment && investment > 0" ng-repeat="(product, investment) in singleLegGame.totalInvestment as allProducts">
+                <span ng-if="ctrl.hasMultipleInvestments(singleLegGame)">{{::product | presentProductAsText}}</span>{{investment | kroner : true : false}}
+            </span>
+            
+        </div>
+
+        <div class="products-list__expander"></div>
+
+    </div>
+
+    <button class="btn btn--small btn--neutral-lighter u-display-block" ng-click="ctrl.toggleExpandRaces(productForTimeline)">
+        <icon icon="up" icon-color="neutral" icon-size="small"></icon>
+    </button>
+</div>

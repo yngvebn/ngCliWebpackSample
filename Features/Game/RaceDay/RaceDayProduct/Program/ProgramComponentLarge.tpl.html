@@ -1,0 +1,94 @@
+﻿<section class="program" *ngIf="selectedRace">
+    <header class="program__header--large">
+        <div class="program__legs-details">
+            <ul id="program-legs" class="program__legs" *ngIf="programData">
+                <li class="program__leg" *ngFor="let race of programData.races" [ngClass]="'racenumber--'+race.raceNumber">
+                    <button class="leg btn btn--small btn--white" (click)="selectRace(race)" [ngClass]="{'active': race.raceNumber === selectedRaceNumber}">{{race.legNumber}}</button>
+                </li>
+            </ul>
+            <ul id="program-header-details" class="program__header__details">
+                <li class="program__header__details__item">
+                    <h3 class="heading-level-3">
+                        <strong>{{programData.product}}-{{selectedRace.legNumber}}</strong>
+                    </h3>
+                </li>
+                <li class="program__header__details__item">Løp: <strong>{{selectedRace.raceNumber}}</strong></li>
+                <li class="program__header__details__item">Start: <strong>{{startTimeForRace(selectedRace.raceNumber)}}</strong></li>
+                <li class="program__header__details__item"><strong>{{selectedRace.distance}}m</strong></li>
+                <li class="program__header__details__item"><strong>{{selectedRace.startMethod | presentStartMethodAsText}}</strong></li>
+                <li class="program__header__details__item" *ngIf="selectedRace.isMonte"><strong>Monté</strong></li>
+            </ul>
+        </div>
+        <p class="u-text-small">
+            <span *ngIf="selectedRace.raceName">{{selectedRace.raceName}}.</span> {{selectedRace.propositions}}
+        </p>
+    </header>
+    <table id="program-table" class="default-table program-table program-table--large">
+        <thead id="program-header" class="default-table__thead">
+            <tr>
+                <th [class.sorter]="sort.predicateName === 'startNumber'" [class.sorter--asc]="sort.predicateName === 'startNumber' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('startNumber')">Startnr</button></th>
+                <th [class.sorter]="sort.predicateName === 'horseName'" [class.sorter--asc]="sort.predicateName === 'horseName' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-left" (click)="setSort('horseName')">Hest/Kusk</button></th>
+                <th [class.sorter]="sort.predicateName === 'postPosition'" [class.sorter--asc]="sort.predicateName === 'postPosition' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('postPosition')">Spor</button></th>
+                <th [class.sorter]="sort.predicateName === 'extraDistance'" [class.sorter--asc]="sort.predicateName === 'extraDistance' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('extraDistance')">Tillegg</button></th>
+                <th><button class="btn btn--small btn--neutral-lighter u-text-center">Sko</button></th>
+                <th [class.sorter]="sort.predicateName === 'winPercentage'" [class.sorter--asc]="sort.predicateName === 'winPercentage' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('winPercentage')">Seier</button></th>
+                <th [class.sorter]="sort.predicateName === 'triplePercentage'" [class.sorter--asc]="sort.predicateName === 'triplePercentage' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('triplePercentage')">Trippel</button></th>
+                <th><button class="btn btn--small btn--neutral-lighter u-text-center">Galopp</button></th>
+                <th [class.sorter]="sort.predicateName === 'recordVolt'" [class.sorter--asc]="sort.predicateName === 'recordVolt' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('recordVolt')">Volte</button></th>
+                <th [class.sorter]="sort.predicateName === 'recordAuto'" [class.sorter--asc]="sort.predicateName === 'recordAuto' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('recordAuto')">Auto</button></th>
+                <th [class.sorter]="sort.predicateName === 'investmentPercentage'" [class.sorter--asc]="sort.predicateName === 'investmentPercentage' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('investmentPercentage')">Innsats</button></th>
+                <th [class.sorter]="sort.predicateName === 'winOdds'" [class.sorter--asc]="sort.predicateName === 'winOdds' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('winOdds')">Vinner</button></th>
+                <th [class.sorter]="sort.predicateName === 'totalEarnings'" [class.sorter--asc]="sort.predicateName === 'totalEarnings' && !sort.reverse"><button class="btn btn--small btn--neutral-lighter u-text-right" (click)="setSort('totalEarnings')">Innkjørt</button></th>
+            </tr>
+        </thead>
+        <!--;orderBy:sort.predicateName:sort.reverse-->
+        <!--;trackBy (selectedRace.raceNumber+'-'+start.startNumber)-->
+        <tbody class="default-table__tbody horse" *ngFor="let start of sortedStarts" [class.selected]="marks[selectedRace.legNumber].indexOf(start.startNumber) > -1" [class.scratched]="start.scratched">
+        <tr class="program-table__first-row">
+            <td class="u-text-center" (click)="select(start)"><span class="start-number marking-checkbox__box marking-checkbox__box--large">{{start.startNumber }}</span></td>
+            <td class="horse__name">
+                <div class="horse__name__horse">{{start.horseName}}</div>
+                <span class="horse__name__rider">{{start.driverChanged ? start.newDriver : start.driver}} <span *ngIf="start.driverChanged" class="u-text-error">(NY)</span></span>
+            </td>
+            <td class="u-text-center post-position"><strong>{{start.postPosition}}</strong></td>
+            <td class="u-text-center extra-distance">
+                <div *ngIf="start.extraDistance > 0">+{{start.extraDistance}}m</div>
+                <div *ngIf="start.extraDistance == 0">&mdash;</div>
+            </td>
+            <td class="u-text-center"></td>
+            <td class="u-text-center win-percentage"><strong>{{start.winPercentage | prosent}}</strong></td>
+            <td class="u-text-center triple-percentage"><strong>{{start.triplePercentage | prosent}}</strong></td>
+            <td class="u-text-center"><strong></strong></td>
+            <td class="u-text-center record-volt">{{start.recordVolt}}</td>
+            <td class="u-text-center record-auto">{{start.recordAuto}}</td>
+            <td class="u-text-center investment-percentage"><strong>{{start.investmentPercentage | prosent}}</strong></td>
+            <td class="u-text-center win-odds"><strong *ngIf="start.winOdds">{{start.winOdds | tall}}</strong><strong *ngIf="!start.winOdds">&mdash;</strong></td>
+            <td class="u-text-right total-earnings"><strong>{{start.totalEarnings | kroner : true : false}}</strong></td>
+        </tr>
+
+            <tr class="program-table__second-row">
+                <td colspan="7" class="u-text-left">
+                    <p class="u-text-smaller horse-info">{{start.age}}-års {{start.color | lowercase}} {{start.sex | lowercase}} <span *ngIf="start.father || start.mother">e {{start.father}} - {{start.mother}}</span><span *ngIf="start.grandfather"> e {{start.grandfather}}</span></p>
+                </td>
+                <td colspan="6" class="u-text-left">
+                    <p class="u-text-smaller">
+                        <span class="program-table__annual-stats current-year"><horse-annual-statistics *ngIf="start.horseAnnualStatistics.currentYear" [model]="start.horseAnnualStatistics.currentYear"></horse-annual-statistics></span>
+                        <span class="program-table__annual-stats previous-year"><horse-annual-statistics *ngIf="start.horseAnnualStatistics.previousYear" [model]="start.horseAnnualStatistics.previousYear"></horse-annual-statistics></span>
+                        <span class="program-table__annual-stats total"><horse-annual-statistics *ngIf="start.horseAnnualStatistics.total" [model]="start.horseAnnualStatistics.total"></horse-annual-statistics></span>
+                    </p>
+                </td>
+            </tr>
+            <tr class="program-table__second-row">
+                <td colspan="13">
+                    <p class="u-text-small crew"><span *ngIf="start.trainer"> <strong>Trener:</strong> {{start.trainer}}</span><span *ngIf="start.owner">, <strong>Eier:</strong> {{start.owner}}</span><span *ngIf="start.breeder">, <strong>Oppdretter:</strong> {{start.breeder}}</span></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="13" class="program-table__latest-races" *ngIf="start.formRows && start.formRows.length">
+                    <form-rows-large id="form-rows" [formRows]="start.formRows"></form-rows-large>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

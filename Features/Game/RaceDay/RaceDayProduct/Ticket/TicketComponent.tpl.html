@@ -1,0 +1,37 @@
+﻿<div class="user-markings" ng-class="">
+    <div>
+        <table class="base-tbl markings-tbl">
+            <thead class="markings-tbl__head">
+                <tr>
+                    <th class="base-tbl__th markings-tbl__th">Avd</th>
+                    <th class="base-tbl__th markings-tbl__th markings-tbl__cell--border-left">Hester</th>
+                    <th class="base-tbl__th markings-tbl__th markings-tbl__cell--border-left">Alle</th>
+                    <th class="base-tbl__th markings-tbl__th markings-tbl__cell--border-left">Ant.</th>
+                </tr>
+            </thead>
+            <tbody class="base-tbl__body markings-tbl__body">
+                <tr *ngFor="let leg of legs"
+                    (click)="selectLeg(leg.race)"
+                    class="base-tbl__data-row markings-tbl__data-row"
+                    [class.selected]="leg.race.raceNumber === selectedRaceNumber">
+                    <td>
+                        <span>{{leg.legNumber}}</span>
+                    </td>
+                    <td>
+                        <leg-marks-row [starts]="leg.race.starts"
+                                       [maxNumberOfStarts]="15"
+                                       [legNumber]="leg.legNumber"
+                                       [marks]="marks[leg.legNumber]"
+                                       (onSelect)="select($event)"></leg-marks-row>
+                    </td>
+                    <td>
+                        <button type="button" class="markings-lst__btn selectable" [class.selected]="isAllSelected(leg.race)" (click)="selectAll(leg.race)">
+                            A
+                        </button>
+                    </td>
+                    <td>{{marks[leg.legNumber].length}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

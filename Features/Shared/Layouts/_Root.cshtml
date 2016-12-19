@@ -1,0 +1,30 @@
+﻿@{
+
+    Layout = "~/Features/Shared/Layouts/_SharedRoot.cshtml";
+    ViewBag.Lang = "nb-no";
+    ViewBag.DisableIndexing = true;
+    ViewBag.Lang = "no";
+    ViewBag.MetaDescription = "";
+}
+
+@section head
+{
+    @RenderSection("head", false)
+}
+
+@section header{
+    @RenderSection("header", false)
+}
+
+@section body
+{
+    @RenderBody()
+}
+
+@section footer{
+    @RenderSection("footer", false)
+}
+
+@section pageScripts{
+    @RenderSection("pageScripts", false)
+}

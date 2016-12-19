@@ -1,0 +1,28 @@
+﻿<th class="product__title product__title--multileg" [ngClass]="'product__title__'+productForTimeline.product" [class.product__title__gallop]="selectedRaceDay.sportType === 'G'" scope="row">
+    <button class="product__btn product__title__text " [routerLink]="['./', productForTimeline.product]"  ui-sref="game.raceDay.product({ product: productForTimeline.product, betData: ''})">
+        <span class="sr-only">Spill </span>
+        {{productForTimeline.product}}
+        <span class="sr-only" *ngIf="productForTimeline.hasBonus && !productForTimeline.hasJackpot">med Bonus!</span>
+        <span class="sr-only" *ngIf="!productForTimeline.hasBonus && productForTimeline.hasJackpot">med Jackpot!</span>
+        <span class="sr-only" *ngIf="productForTimeline.hasBonus && productForTimeline.hasJackpot">med Jackpot og Bonus!</span>
+    </button>
+</th>
+
+<template ngFor let-item [ngForOf]="productsForRaceDay.races" let-i="index">
+    <td [ngClass]="'is-'+item.progressStatus.toLowerCase()" 
+        [class.is-empty]="!isRacePartOfGame(item, productForTimeline)" 
+        [class.is-multileg]="isRacePartOfGame(item, productForTimeline)"
+        [class.is-first]="i === 0"
+        [class.is-jackpot]="productForTimeline.hasJackpot"
+        [class.is-moved]="item.hasBeenMoved">
+        <button *ngIf="isRacePartOfGame(item, productForTimeline)" class="product__btn" [routerLink]="['./', productForTimeline.product]">
+            <span class="product__btn__race-start">{{item.displayStartTime}}</span>
+            <span class="product__btn__extra" *ngIf="productForTimeline.hasBonus && !productForTimeline.hasJackpot">Bonus!</span>
+            <span class="product__btn__extra u-text-highlight" *ngIf="!productForTimeline.hasBonus && productForTimeline.hasJackpot">Jackpot!</span>
+            <span class="product__btn__extra u-text-highlight" *ngIf="productForTimeline.hasBonus && productForTimeline.hasJackpot">Jackpot og Bonus!</span>
+        </button>
+    </td>
+</template>
+<td class="product__revenues product__revenue__{{productForTimeline.product}}">
+    <div class="product__revenue">{{productForTimeline.totalInvestment | kroner : true : 0 : true}}</div>
+</td>

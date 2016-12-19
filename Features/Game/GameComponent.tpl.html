@@ -1,0 +1,23 @@
+﻿<div id="game-component" class="p p--white u-overflow-hidden {{uiService.stateName}}" [class.tracks-closed]="!uiService.tracksToggled">
+
+    <div class="l l--tracks">
+        <div class="l__side" id="track-selector" *ngIf="uiService.tracksToggled">
+            <race-day-selector class="race-day-selector" toggle-tracks="uiService.toggleTracks()"></race-day-selector>
+        </div>
+        <div class="l__content" id="track">
+            <router-outlet></router-outlet>
+            <div class="product-timeline__shadow" (click)="uiService.toggleTracks()"></div>
+        </div>
+    </div>
+    <p class="u-text-small u-text-right u-padded-half u-max-width yr-disclaimer"> Værvarsel fra Yr, levert av NRK og Meteorologisk institutt</p>
+    
+    <ul *ngIf="false">
+        <li style="display:inline; padding-left:1em" *small>Small</li>
+        <li style="display:inline; padding-left:1em" *medium>Medium</li>
+        <li style="display:inline; padding-left:1em" *mediumDown>MediumDown</li>
+        <li style="display:inline; padding-left:1em" *large>Large</li>
+        <li style="display:inline; padding-left:1em" *largeDown>LargeDown</li>
+        <li style="display:inline; padding-left:1em" *mediumOnly>MediumOnly</li>
+    </ul>
+
+</div>

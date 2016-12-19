@@ -1,0 +1,19 @@
+﻿
+<nav class="service-menu">
+    <h2 class="sr-only">Hjelpemeny</h2>
+    <ul class="service-menu__items">
+        <login is-authenticated="@(Request.IsAuthenticated.ToString().ToLower())"></login>
+
+        @*<li class="service-menu__item">
+            <button href="#" class="service-menu__link btn btn--link btn--menu-toggler jsMenuToggler">
+                <svg role="img" viewBox="0 0 32 32" class="icon icon--inverse" aria-hidden="true">
+                    <use xlink:href="/UI/Icons/svg-defs.svg#hamburger"></use>
+                </svg>
+                <span class="sr-only">Menu</span>
+            </button>
+        </li>*@
+    </ul>
+    @{
+        Html.RenderAction("Index", "MainMenu");
+    }
+</nav>

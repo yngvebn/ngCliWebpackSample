@@ -1,0 +1,14 @@
+﻿<ul class="horizontal-list__body">
+    <li class="horizontal-list__item" (click)="toggle(button)" *ngFor="let button of markingButtons">
+        <span type="button"
+              tooltip-start-info="button"
+              class="markings-lst__btn"
+              [class.jackpot]=""
+              [class.bonus]=""
+              [class.selected]="marks.indexOf(button.startNumber) > -1"
+              [class.scratched]="button.start.scratched"
+              [class.no-start]="!button.active">
+            {{button.startNumber}}
+        </span>
+    </li>
+</ul>

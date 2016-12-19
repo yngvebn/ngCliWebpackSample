@@ -1,0 +1,19 @@
+﻿<div id="purchase-dialog">
+    <purchase-confirmation [betData]="betData" 
+                           [firstRaceInProduct]="firstRaceInProduct" 
+                           [selectedRaceDay]="selectedRaceDay" 
+                           [programData]="programData" 
+                           [priceInfoForProduct]="priceInfoForProduct" 
+                           [customerSupportLinks]="customerSupportLinks" 
+                           (onPurchase)="purchase()"
+                           *ngIf="showPurchaseConfirmation"></purchase-confirmation>
+
+    <purchase-receipt *ngIf="showPurchaseReceipt" 
+                      [purchaseReceipt]="purchaseReceipt" 
+                      [firstRaceInProduct]="firstRaceInProduct" 
+                      [selectedRaceDay]="selectedRaceDay" 
+                      [betDataObj]="betDataObj"></purchase-receipt>
+
+    <purchase-error *ngIf="showPurchaseError"
+                    [purchaseError]="purchaseError"></purchase-error>
+</div>

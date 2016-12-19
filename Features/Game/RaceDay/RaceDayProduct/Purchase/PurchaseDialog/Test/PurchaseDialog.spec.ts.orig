@@ -1,0 +1,119 @@
+﻿describe('Component: PurchaseDialogComponent',
+    () => {
+        let $compile, $rootScope, element, $httpBackend, $state, $window;
+        let pageObject: Pages.PurchaseDialogComponentPageObj;
+        beforeEach(angular.mock.module('toto'));
+
+        beforeEach(angular.mock.inject((_$compile_, _$rootScope_, _$httpBackend_, _$state_, _$window_) => {
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+            $httpBackend = _$httpBackend_;
+            $state = _$state_;
+            $window = _$window_;
+            $window.dataLayer = [];
+
+            TestData.HttpBackend.setupAllRoutes($httpBackend);
+           
+            $rootScope.selectedRaceDay = TestData.Game.getRaceDay('BJ_NR_2011-09-08');
+            $rootScope.betData = 'd:2011-09-08|t:BJ|g:V5A|e:0|org:NR|f:100|pr:500|o:0|s1:2|s2:28|s3:4|s4:496|s5:2016|l:1';
+            $rootScope.programData = TestData.Game.getProgramWithAdditionFor('BJ_NR_2011-09-08', 'V5A');
+            $rootScope.priceInfoForProduct = TestData.ProductPriceInfo.getPriceInfoForProduct('V5A');
+            $rootScope.bettingSystemIsOpenForBet = true;
+            let productsForRaceDay = TestData.Game.getProductsForTimeLine('BJ_NR_2011-09-08');
+            $rootScope.firstRaceInProduct = _.find(productsForRaceDay.races, (race) => race.raceNumber === $rootScope.programData.races[0].raceNumber);
+
+            element = $compile(`<purchase-dialog bet-data="betData" selected-race-day="selectedRaceDay" program-data=programData price-info-for-product="priceInfoForProduct" betting-system-is-open-for-bet="bettingSystemIsOpenForBet" first-race-in-product="firstRaceInProduct" />`)($rootScope);
+        }));
+
+        scenario('Vise bekreftvindu', () => {
+            når('bekreftelsesdialogen blir initiert', () => {
+                $rootScope.$digest();
+                $httpBackend.flush();
+                pageObject = new Pages.PurchaseDialogComponentPageObj(element);
+            });
+
+            så('skal jeg se headingen', () => {
+                let headerText = pageObject.getHeaderText();
+                expect(headerText).toContain('V5A BJERKE 08.09 kl. 13:37');
+            });
+
+            så('skal jeg se markeringene mine', () => {
+                let markingsRows = pageObject.getMarkingsRows();
+
+                //Pattern in contain statement: (<legnumber>|<Markings (and horsename)|<number of marks>
+                expect(markingsRows[0]).toContain('1|1 Elken Dijon|1');
+                expect(markingsRows[1]).toContain('2|2, 3, 4|3');
+                expect(markingsRows[2]).toContain('3|2 Borg Emil|1');
+                expect(markingsRows[3]).toContain('4|4, 5, 6, 7, 8|5');
+                expect(markingsRows[4]).toContain('5|5, 6, 7, 8, 9, 10|6');
+            });
+
+            så('skal jeg se oppsummering av rekker og pris', () => {
+                let summaryRow = pageObject.getTicketSummaryRow();
+
+                expect(summaryRow).toBe('90 rekker á kr 5 + bongavgift kr 5');
+            });
+
+            så('skal jeg se totalprisen', () => {
+                let text = pageObject.getTotalCost();
+
+                expect(text).toBe('Totalt kr 455,00');
+            });
+        });
+
+
+        scenario('Kjøp er vellykket', () => {
+            når('jeg klikker på kjøp i bekreftelsesvinduet', () => {
+                TestData.HttpBackend.setupPurchaseSuccess($httpBackend);
+                TestData.HttpBackend.setupPrizeNotificationSettings($httpBackend, true, true);
+                $rootScope.$digest();
+                $httpBackend.flush();
+
+                pageObject = new Pages.PurchaseDialogComponentPageObj(element);
+                pageObject.confirmPurchase();
+                $httpBackend.flush();
+            });
+
+            så('skal jeg se kvittering', () => {
+                expect(pageObject.isShowingPurchaseReceipt()).toBe(true);
+            });
+
+            så('skal kvittering inneholde TSN-nummer', () => {
+                expect(pageObject.hasText('TSN-nummer: TEST123456789')).toBe(true);
+            });
+
+            it('skal datalayer bli populert', () => {
+                let dataLayer = $window.dataLayer;
+                let dataLayerEvent: PurchaseGtmEvent = dataLayer[1] as PurchaseGtmEvent;
+                let receiptPageVirtualEvent: PageVirtualLoggedInUserEvent = dataLayer[2] as PageVirtualLoggedInUserEvent;
+
+                expect(dataLayer.length).toBe(3);
+                expect(dataLayerEvent.ecommerce.purchase.products.length).toBe(1);
+                expect(dataLayerEvent.ecommerce.purchase.products[0].price).toBe('450.00'); //betcost excl. sellFee
+                expect(dataLayerEvent.ecommerce.purchase.products[0].name).toBe('V5'); //name of product
+                expect(dataLayerEvent.ecommerce.purchase.products[0].metric1).toBe('90'); //number of rows
+                expect(dataLayerEvent.ecommerce.purchase.actionField.id).toBe('TEST123456789');
+                expect(dataLayerEvent.ecommerce.purchase.actionField.revenue).toBe('455.00');
+                expect(dataLayerEvent.ecommerce.purchase.actionField.tax).toBe('5.00');
+                expect(dataLayerEvent.pageVirtual).toBe('/BJ_NR_2011-09-08/V5A/kvittering');
+                expect(receiptPageVirtualEvent.pageVirtual).toBe('/BJ_NR_2011-09-08/V5A/kvittering');
+            });
+        });
+
+        scenario('Kjøp feiler', () => {
+            når('jeg klikker på kjøp i bekreftelsesvinduet', () => {
+                TestData.HttpBackend.setupPurchaseError($httpBackend);
+                $rootScope.$digest();
+                $httpBackend.flush();
+
+                pageObject = new Pages.PurchaseDialogComponentPageObj(element);
+                pageObject.confirmPurchase();
+                $httpBackend.flush();
+            });
+
+            så('skal jeg se feilmelding', () => {     
+                expect(pageObject.isShowingPurchaseError()).toBe(true);
+                expect(pageObject.hasText('Spillet ble ikke levert')).toBe(true);
+            });
+        });
+    });

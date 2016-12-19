@@ -1,0 +1,30 @@
+﻿
+<div class="products-list__row products-list__listhead">
+    <div class="products-list__action u-text-center"></div>
+    <div class="products-list__details">
+        <div class="products-list__time">Start</div>
+        <div class="products-list__racenumbers">Løp</div>
+        <div class="products-list__revenue">Omsetning</div>
+    </div>
+    <div class="products-list__expander"></div>
+</div>
+
+
+<div *ngFor="let productForTimeline of productsForRaceDay.products"
+     class="product-small"
+     [class.is-jackpot]="productForTimeline.hasJackpot"
+     [ngClass]="[productForTimeline.isMultiLegGame ? ('is-'+productForTimeline.progressStatus.toLowerCase()) : '']">
+
+
+
+    <multi-leg-game-small class="product-small"
+                          [class.is-jackpot]="productForTimeline.hasJackpot"
+                          [ngClass]="'is-'+(productForTimeline.progressStatus || '').toLowerCase()"
+                          *ngIf="productForTimeline.isMultiLegGame"
+                          [productsForRaceDay]="productsForRaceDay"
+                          [selectedRaceDay]="selectedRaceDay"
+                          [productForTimeline]="productForTimeline"></multi-leg-game-small>
+    <!--<single-leg-game-small *ngIf="!item.isMultiLegGame" [productForTimeline]="item" [productsForRaceDay]="productsForRaceDay" [selectedRaceDay]="selectedRaceDay" style="display:table-row"></single-leg-game-small>-->
+
+    <!--MultiLegGameRow.tpl.html || SingleLegGameRow.tpl.html -->
+</div>

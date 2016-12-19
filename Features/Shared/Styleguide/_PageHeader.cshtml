@@ -1,0 +1,18 @@
+﻿@using EPiServer.Web.Mvc.Html
+<div class="p p--header">
+    <header class="main-header">
+        <div class="masthead">
+            <a href="/" class="masthead__logo">
+                <h1 class="sr-only">@ViewBag.PageName</h1>
+                <img src="/UI/logo-rikstoto.svg" class="masthead__logo__img" />
+            </a>
+        </div>
+        <div class="main-navigation">
+            <div class="main-navigation__menus">
+                @Html.Partial("~/Features/Shared/Styleguide/_MenuMain.cshtml")
+                <login is-authenticated="@(Request.IsAuthenticated.ToString().ToLower())" class="main-header-usr"></login>
+            </div>
+        </div>
+    </header>
+    
+</div>

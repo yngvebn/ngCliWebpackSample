@@ -1,0 +1,79 @@
+﻿
+<section class="program program--small" *ngIf="selectedRace" hm-swipeleft="onSwipe($event)" hm-swiperight="onSwipe($event)" hm-recognizer-options='[{"type":"swipe","directions":"DIRECTION_HORIZONTAL"}]'>
+    <header id="program-header-small" class="program__header--small">
+        <ul id="program-legs" class="program__legs" *ngIf="programData">
+            <li class="program__leg" *ngFor="let race of programData.races" [ngClass]="['racenumber--'+race.raceNumber]">
+                <button class="leg btn btn--small btn--white" (click)="selectRace(race)" [ngClass]="{'active': race.raceNumber === selectedRaceNumber}">{{race.legNumber}}</button>
+            </li>
+        </ul>
+        <h3>Start {{startTimeForRace(selectedRace.raceNumber)}}&nbsp;&nbsp;{{selectedRace.distance}}m&nbsp;&nbsp;{{selectedRace.startMethod | presentStartMethodAsText}}<span *ngIf="selectedRace.isMonte">&nbsp;&nbsp;Monté</span></h3>
+        <p class="u-text-small">
+			<span *ngIf="selectedRace.raceName">{{selectedRace.raceName}}.</span> {{selectedRace.propositions}}
+        </p>
+    </header>
+    <table id="program-table" class="default-table program-table">
+        <thead id="program-header" class="default-table__thead">
+            <tr>
+                <th [class.sorter]="sort.predicateName === 'startNumber'" [class.sorter--asc]="sort.predicateName === 'startNumber' && !sort.reverse">
+                    <button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('startNumber')">Nr</button>
+                </th>
+                <th [class.sorter]="sort.predicateName === 'investmentPercentage'" [class.sorter--asc]="sort.predicateName === 'investmentPercentage' && !sort.reverse">
+                    <button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('investmentPercentage')">Innsats</button>
+                </th>
+                <th [class.sorter]="sort.predicateName === 'winOdds'" [class.sorter--asc]="sort.predicateName === 'winOdds' && !sort.reverse">
+                    <button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('winOdds')">Vinner</button>
+                </th>
+                <th [class.sorter]="sort.predicateName === 'extraDistance'" [class.sorter--asc]="sort.predicateName === 'extraDistance' && !sort.reverse">
+                    <button class="btn btn--small btn--neutral-lighter u-text-center" (click)="setSort('extraDistance')">Tillegg</button>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="default-table__tbody horse" *ngFor="let start of sortedStarts"
+               [class.selected]="marks[selectedRace.legNumber].indexOf(start.startNumber) > -1" [class.scratched]="start.scratched">
+            <tr class="program-table__first-row">
+                <td class="u-text-center start-number">{{start.startNumber}}</td>
+                <td class="horse__name" colspan="3">
+                    <div class="horse__name__horse">{{start.horseName}}</div>
+                    <span class="horse__name__rider">{{start.driverChanged ? start.newDriver : start.driver}} <span *ngIf="start.driverChanged" class="u-text-error">(NY)</span></span>
+                </td>
+                <td class="u-text-center"><span class="marking-checkbox__box" (click)="select(start)"></span></td>
+            </tr>
+
+            <tr class="program-table__second-row">
+                <td>
+                    <button (click)="start.toggleFormRows()" class="btn btn--small btn--transparent u-display-block">
+                        <!--<icon *ngIf="!start.showFormRows" icon="down" icon-size="small" icon-color="black"></icon>
+                        <icon *ngIf="start.showFormRows" icon="up" icon-size="small" icon-color="black"></icon>-->
+                    </button>
+                </td>
+                <td class="u-text-center investment-percentage">{{start.investmentPercentage | prosent}}</td>
+                <td class="u-text-center win-odds"><span *ngIf="start.winOdds">{{start.winOdds | tall}}</span><span *ngIf="!start.winOdds">&mdash;</span></td>
+                <td class="u-text-center extra-distance"><span *ngIf="start.extraDistance > 0">+{{start.extraDistance}}m</span></td>
+                <td></td>
+            </tr>
+            <tr *ngIf="start.showFormRows" class="program-table__third-row">
+                <td>&nbsp;</td>
+                <td class="post-position">Spor {{start.postPosition}}</td>
+                <td></td>
+                <td colspan="2" class="u-text-left">
+                    <span class="record" *ngIf="start.recordVolt && start.recordAuto">{{start.recordVolt}}, {{start.recordAuto}}</span>
+                    <span class="record" *ngIf="!(start.recordVolt && start.recordAuto)">{{start.recordVolt}}{{start.recordAuto}}</span>
+                </td>
+                <td></td>
+            </tr>
+            <tr *ngIf="start.showFormRows">
+                <td colspan="5">
+                    <form-rows-small id="form-rows" [formRows]="start.formRows"></form-rows-small>
+                </td>
+            </tr>
+            <tr *ngIf="start.showFormRows">
+                <td colspan="5">
+                    <button (click)="start.toggleFormRows()" class="btn btn--small btn--transparent u-display-block">
+                        <!--<icon icon="up" icon-color="neutral" icon-size="small"></icon>-->
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

@@ -1,0 +1,19 @@
+﻿<div class="editable-select">
+    <div class="editable-select__manual-input-wrapper">
+        <input autocomplete="off" type="text" [value]="options.selectedItem.name"
+               #manualInput
+               class="editable-select__manual-input"
+               (blur)="hideOptions($event)"
+               (change)="updateSelectedItem(manualInput.value)"
+               (keydown)="handleKeyPress($event)"
+               (click)="toggleOptions($event)" />
+    </div>
+    <div class="editable-select__dropdown-trigger" src="" (click)="toggleOptions($event)"></div>
+    <div class="editable-select__options" *ngIf="optionsVisible">
+        <ul>
+            <li class="option" *ngFor="let item of items"
+                (click)="select(item)"
+                [class.selected]="isSelected(item)">{{item.name}}</li>
+        </ul>
+    </div>
+</div>

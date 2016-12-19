@@ -1,0 +1,29 @@
+﻿<div class="dialog-contents" [ngClass]="{error: error || logonAttemptsExceeded}">
+    <form *ngIf="!logonAttemptsExceeded" class="login-form" #loginForm="ngForm" name="loginForm" novalidate (ngSubmit)="doLogin(loginForm)">
+        <div *ngIf="error" role="alert" class="validation">
+            <div class="validation__error">{{error}}</div>
+        </div>
+        <legend class="h-level-2 h-level--thin u-text-profile">Logg inn</legend>
+        <div class="login-form__inputs">
+            <label for="username">Brukernavn</label>
+            <input id="username" name="username" ngModel type="text">
+            <label for="password">Passord</label>
+            <input id="password" name="password" ngModel type="password">
+        </div>
+        <div class="login-form__buttons">
+            <div>
+                <button class="btn" [disabled]="isBusyLoggingIn || loginForm.invalid" type="submit">
+                    <md-progress-circular class="md-hue-2" md-diameter="20px" *ngIf="isBusyLoggingIn"></md-progress-circular>
+                    <span *ngIf="!isBusyLoggingIn">Logg inn</span>
+                </button>
+                <a class="btn btn--link" [href]="forgotPasswordUrl">Glemt passord</a>
+            </div>
+            <button class="btn btn--transparent login-form__cancel" (click)="close()" type="button">Avbryt</button>
+        </div>
+
+    </form>
+    <div class="login-form" *ngIf="logonAttemptsExceeded">
+        <h3 class="h-level-2 h-level--thin u-text-white validation__error">Oops!</h3>
+        <p>Du har tastet feil brukernavn/passord for mange ganger og kontoen er låst i ca. 1 time. Du kan kontakte kundestøtte på (+47) 815 11 222 om du vil åpne kontoen raskere.</p>
+    </div>
+</div>

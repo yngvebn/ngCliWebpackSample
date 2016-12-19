@@ -1,0 +1,8 @@
+﻿<div *ngIf="selectedRaceDay.progressStatus !== 'Abandoned'">
+    <product-timeline-small *small
+                            [selectedRaceDay]="selectedRaceDay"
+                            [productsForRaceDay]="productsForRaceDay"></product-timeline-small>
+    <product-timeline-large *medium
+                            [selectedRaceDay]="selectedRaceDay"
+                            [productsForRaceDay]="productsForRaceDay"></product-timeline-large>
+</div>

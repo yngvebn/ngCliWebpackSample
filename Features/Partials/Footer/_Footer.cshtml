@@ -1,0 +1,60 @@
+﻿@using EPiServer.SpecializedProperties
+@using EPiServer.Web.Mvc.Html
+@model Rikstoto.Toto.Epi.Pages.StartPage.StartPage
+
+<div class="p p--neutral-darker">
+    <footer class="l main-footer">
+        <div class="main-footer__lists">
+            <div class="main-footer__list cf">
+                <h3 class="main-footer__heading">Stiftelsen Norsk Rikstoto</h3>
+                <ul class="main-footer__linklist">
+                    @foreach (var link in Model.CustomerSupportLinks ?? new LinkItemCollection())
+                    {
+                    <li><a href="@Url.PageUrl(link.Href)" target="@link.Target">@link.Title</a></li>
+                    }
+                    <li class="tel-for-mobile"><a href="tel:@Model.CustomerSupportPhoneNumber">tlf. @Model.CustomerSupportPhoneNumber</a></li>
+                    <li class="tel-for-desktop">tlf. @Model.CustomerSupportPhoneNumber</li>
+                        @foreach (var link in Model.AdditionalCustomerSupportLinks ?? new LinkItemCollection())
+                        {
+                            <li><a href="@Url.PageUrl(link.Href)" target="@link.Target">@link.Title</a></li>
+                        }
+                </ul>
+            </div>
+            <div class="main-footer__list cf">
+                <h3 class="main-footer__heading">Åpningstider for nettspill:</h3>
+                <ul class="main-footer__linklist">
+                    <li>@Model.OpeningHours</li>
+                        @foreach (var link in Model.OpeningHoursLinks ?? new LinkItemCollection())
+                        {
+                            <li><a href="@Url.PageUrl(link.Href)" target="@link.Target">@link.Title</a></li>
+                        }
+                </ul>
+            </div>
+            <div class="main-footer__list cf">
+                <h3 class="main-footer__heading">Hjelpelinje:</h3>
+                <ul class="main-footer__linklist">
+                        @foreach (var link in Model.HelpingLineLinks ?? new LinkItemCollection())
+                        {
+                            <li><a href="@Url.PageUrl(link.Href)" target="@link.Target">@link.Title</a></li>
+                        }
+                    <li class="tel-for-mobile"><a href="tel:+47@Model.HelpingLinePhoneNumber">tlf. @Model.HelpingLinePhoneNumber</a></li>
+                    <li class="tel-for-desktop">tlf. @Model.HelpingLinePhoneNumber</li>
+                </ul>
+            </div>
+        </div>
+        <ul class="social-media">
+            <li class="social-media__item">
+                <a href="https://twitter.com/#!/Norsk_Rikstoto" target="_blank" title="Besøk Norsk Rikstotos Twitter side" class="social-media__link">
+                    <icon icon="twitter" icon-size="small" inverse="true"></icon>
+                    <span class="sr-only">Overskyet</span>
+                </a>
+            </li>
+            <li class="social-media__item">
+                <a href="http://www.facebook.com/norskrikstoto" target="_blank" title="Besøk Norsk Rikstotos Facebook side" class="social-media__link">
+                    <icon icon="facebook2" icon-size="small" inverse="true"></icon>
+                    <span class="sr-only">Del på facebook</span>
+                </a>
+            </li>
+        </ul>
+    </footer>
+</div>

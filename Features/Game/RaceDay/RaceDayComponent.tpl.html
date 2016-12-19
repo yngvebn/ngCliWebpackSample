@@ -1,0 +1,63 @@
+﻿
+    <header class="c__header product-timeline__header" *ngIf="selectedRaceDay">
+        <div class="product-timeline__header-row">
+            <button class="btn btn--transparent product-timeline__header__toggler" (click)="uiService.toggleTracks()">
+                <icon icon="dots" icon-color="support"></icon>
+            </button>
+            <button class="btn btn--transparent product-timeline__header__link" [routerLink]="['/']">
+                <icon icon="dots" icon-color="support"></icon>
+            </button>
+            <div class="product-timeline__header__name">
+                <h2 class="h-level-1 h-level--thin" [ngClass]="{'is-abandoned' : selectedRaceDay.progressStatus === 'Abandoned'}">
+                    <a [routerLink]="['..']">{{selectedRaceDay.raceDayName}}</a>
+                </h2>
+                <span class="product-timeline__header__trackcode">
+                    ({{selectedRaceDay.trackCode}}<span *ngIf="selectedRaceDay.sportType !== 'U'"> - {{selectedRaceDay.sportType | presentSportTypeAsText}}</span>)
+                </span>
+            </div>
+
+            <div class="product-timeline__header__date" *ngIf="selectedRaceDay.progressStatus == 'Finished'">
+                Avsluttet.
+            </div>
+            <time class="product-timeline__header__date" [attr.datetime]="(selectedRaceDay.startTime | amDateFormat:'YYYY-DD-MM HH:mm')" *ngIf="selectedRaceDay.progressStatus !== 'Finished'">
+                {{(selectedRaceDay.startTime | amDateFormat:'dddd DD.MM')}}
+            </time>
+
+            <div class="product-timeline__header__condition">
+                <weather-for-race-day [raceDay]="selectedRaceDay.raceDayKey"></weather-for-race-day>
+            </div>
+
+        </div>
+        <div class="product-timeline__header-row u-hide-for-medium">
+            <div class="product-timeline__header__finished sr-only" *ngIf="selectedRaceDay.progressStatus == 'Finished'">
+                Avsluttet. <a href="#">Se resultat</a>
+            </div>
+
+            <time class="product-timeline__header__date" [attr.datetime]="(selectedRaceDay.startTime | amDateFormat:'YYYY-DD-MM HH:mm')" *ngIf="selectedRaceDay.progressStatus !== 'Finished'">
+                {{(selectedRaceDay.startTime | amDateFormat:'dddd DD.MM')}}
+            </time>
+
+            <div class="product-timeline__header__races" *ngIf="selectedRaceDay.progressStatus !== 'Finished'">
+                {{ productsForRaceDay.races.length }} løp
+            </div>
+
+            <div class="product-timeline__header__time" *ngIf="selectedRaceDay.progressStatus !== 'Finished'">
+                <race-start [race]="productsForRaceDay.races[0]" [minutesToShowCountdown]="30"></race-start>
+            </div>
+        </div>
+
+    </header>
+    <div class="c__content">
+        <p class="u-text-right u-padded-quart u-hide-for-small u-hide-for-medium"  *ngIf="selectedRaceDay.progressStatus !== 'Abandoned'">
+            <button class="btn btn--smallest btn--transparent">
+                <icon icon="videocam"></icon>
+                Følg løpet på Rikstoto direkte
+            </button>
+        </p>
+        <router-outlet></router-outlet>
+
+
+    </div>
+    <div *ngIf="selectedRaceDay.progressStatus === 'Abandoned'" class="c__content product-timeline--abandoned">
+        <span>Avlyst</span>
+    </div>

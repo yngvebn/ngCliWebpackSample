@@ -1,0 +1,164 @@
+﻿<section class="odds u-hide-for-small">
+    <header class="odds__header">
+        <ul class="odds__header__details">
+            <li class="program__header__details__item">
+                <h3 class="heading-level-3">
+                    <strong>{{programData.product}}</strong>
+                </h3>
+            </li>
+            <li class="odds__header__details__item">Start: <strong>{{startTime}}</strong></li>
+        </ul>
+        <!--<md-radio-group class="odds__radio-group">
+            <md-radio-button value="Apple" class="md-primary odds__radio-group__item">
+                <md-tooltip md-direction="top" class="multiline">
+                    <div class="md-tooltip__bg md-tooltip__bg--black">
+                        Vis de mest spilte<br /> kombinasjonene
+                    </div>
+                </md-tooltip>
+                Mest spilte
+            </md-radio-button>
+            <md-radio-button value="Banana" class="md-primary odds__radio-group__item">
+                <md-tooltip md-direction="top" class="multiline">
+                    <div class="md-tooltip__bg md-tooltip__bg--black">
+                        Vis dine markeringer<br /> basert på valg i 1. avdeling
+                    </div>
+                </md-tooltip>
+                Beregn 1. avd
+            </md-radio-button>
+            <md-radio-button value="Mango" class="md-primary odds__radio-group__item">
+                <md-tooltip md-direction="top" class="multiline">
+                    <div class="md-tooltip__bg md-tooltip__bg--black">
+                        Vis dine markeringer<br /> basert på valg i 2. avdeling
+                    </div>
+                </md-tooltip>
+                Beregn 2. avd
+            </md-radio-button>
+        </md-radio-group>-->
+    </header>
+    <table class="default-table odds__table">
+        <!-- Needs colgroup for IE10-11 fixed table layout -->
+        <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+        </colgroup>
+        <thead class="default-table__thead">
+            <tr>
+                <th></th>
+                <th></th>
+                <th colspan="2"><button class="btn btn--small btn--neutral-lighter u-text-left">DD-1</button></th>
+                <th></th>
+                <th colspan="2"><button class="btn btn--small btn--neutral-lighter u-text-left">DD-2</button></th>
+                <th><button class="btn btn--small btn--neutral-lighter u-text-right">Odds</button></th>
+            </tr>
+        </thead>
+        <tbody class="default-table__tbody">
+            <tr *ngFor="let combination of doubleOdds">
+                <td class="u-text-center">
+                    <!--<input type="checkbox"/>-->
+                    <span class="marking-checkbox__box" role="button"></span>
+                </td>
+                <td class="odds__horse__number u-text-right">{{combination.start1.startNumber}}</td>
+                <td class="odds__horse__name"><strong>{{combination.start1.horseName}}</strong></td>
+                <td class="odds__horse__rider">
+                    <div class="u-display-flex u-display-flex--flex-start">
+                        <div class="u-ellipsis">{{combination.start1.driver}}</div>
+                        <!--<span class="tag tag--change">
+                                <md-tooltip md-direction="top" class="multiline">
+                                    <div class="md-tooltip__bg md-tooltip__bg--black">
+                                        <strong>Ny kusk:</strong> {{combination.start1.driver}} har overtatt for Kjell Halbing
+                                    </div>
+                                </md-tooltip>
+                                NY!
+                            </span>-->
+                    </div>
+                </td>
+                <td class="odds__horse__number u-text-right">{{combination.start2.startNumber}}</td>
+                <td class="odds__horse__name"><strong>{{combination.start2.horseName}}</strong></td>
+                <td class="odds__horse__rider">
+                    <div class="u-display-flex u-display-flex--flex-start">
+                        <div class="u-ellipsis">{{combination.start2.driver}}</div>
+                        <!--<span class="tag tag--change"><md-tooltip md-direction="top" class="multiline">
+                                <div class="md-tooltip__bg md-tooltip__bg--black">
+                                    <strong>Ny kusk:</strong> {{combination.start2.driver}} har overtatt for Kjell Halbing
+                                </div>
+                            </md-tooltip>
+                            NY!NY!</span>-->
+                    </div>
+                </td>
+                <td class="u-text-right"><strong>{{combination.odds}}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="u-text-center" *ngIf="!isBusyLoadingMorePages && hasMorePages" >
+        <a href="" (click)="showMorePages()" class="btn btn--small btn--neutral-lighter">
+            Vis flere
+            <icon icon="down" icon-color="neutral-dark" icon-size="medium"></icon>
+        </a>
+    </p>
+    <p *ngIf="isBusyLoadingMorePages"  class="u-display-flex u-display-flex--center u-padded-quart">
+        <!--<md-progress-circular md-diameter="20px"></md-progress-circular>-->
+    </p>
+</section>
+
+<section class="odds u-hide-for-medium">
+    <header class="u-padded-half">
+        <h3 class="sr-only">
+            Mest spilte kombinasjoner
+        </h3>
+        <ul class="odds__header__details odds__header__details--small u-text-small">
+            <li class="program__header__details__item">
+                <h3 class="heading-level-3">
+                    <strong>{{programData.product}}</strong>
+                </h3>
+            </li>
+            <li class="odds__header__details__item">Start: <strong>{{startTime}}</strong></li>
+        </ul>
+    </header>
+    <table class="default-table odds__table-sm">
+        <!-- Needs colgroup for IE10-11 fixed table layout -->
+        <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+        </colgroup>
+        <thead class="default-table__thead">
+            <tr>
+                <th colspan="2"><button class="btn btn--small btn--neutral-lighter u-text-left">Startnummer</button></th>
+                <th><button class="btn btn--small btn--neutral-lighter u-text-center">Vinner</button></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="default-table__tbody odds__table-sm__tbody" *ngFor="let combination of doubleOdds">
+        <tr>
+            <td class="u-text-right">{{combination.start1.startNumber}}</td>
+            <td class="">{{combination.start1.horseName}}</td>
+            <td class="u-text-right" rowspan="2">{{combination.odds}}</td>
+            <td class="u-text-center" rowspan="2"><span class="marking-checkbox__box" role="button"></span></td>
+        </tr>
+        <tr>
+            <td class="u-text-right">{{combination.start2.startNumber}}</td>
+            <td>{{combination.start2.horseName}}</td>
+        </tr>
+        </tbody>
+        <tr>
+            <td colspan="4">
+                <p class="u-text-center" *ngIf="!isBusyLoadingMorePages && hasMorePages" >
+                    <a href="" (click)="showMorePages()" class="btn btn--small btn--neutral-lighter">
+                        Vis flere
+                        <icon icon="down" icon-color="neutral-dark" icon-size="medium"></icon>
+                    </a>
+                </p>
+                <p *ngIf="isBusyLoadingMorePages"  class="u-display-flex u-display-flex--center u-padded-quart">
+                    <!--<md-progress-circular md-diameter="20px"></md-progress-circular>-->
+                </p>
+            </td>
+        </tr>
+    </table>
+</section>

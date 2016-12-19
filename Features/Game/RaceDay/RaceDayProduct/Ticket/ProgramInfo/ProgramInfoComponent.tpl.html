@@ -1,0 +1,31 @@
+﻿<section>
+    <table class="base-tbl horses-tbl horses-tbl--game-window   program-info--width-full" id="starts">
+        <thead class="base-tbl__head horses-tbl__head">
+            <tr>
+                <th [class.desc]="sort.reverse" [class.sort]="sort.predicateName === 'startNumber'" class="base-tbl__th horses-tbl__th program-info--startNo" (click)="setPredicate('startNumber')">Nr</th>
+                <th [class.desc]="sort.reverse" [class.sort]="sort.predicateName === 'horseName'" class="base-tbl__th horses-tbl__th program-info--horse-displayName" (click)="setPredicate('horseName')">Hest</th>
+                <th [class.desc]="sort.reverse" [class.sort]="sort.predicateName === 'driver'" class="base-tbl__th horses-tbl__th  program-info--driver-displayName" (click)="setPredicate('driver')">Kusk</th>
+                <th [class.desc]="sort.reverse" [class.sort]="sort.predicateName === 'investmentPercentage'" class="base-tbl__th horses-tbl__th  program-info--ticket-percentages" (click)="setPredicate('investmentPercentage')">Inns.</th>
+                <th [class.desc]="sort.reverse" [class.sort]="sort.predicateName === 'odds'" class="base-tbl__th horses-tbl__th program-info--ticket-winOdds" (click)="setPredicate('odds')">Vinner</th>
+            </tr>
+        </thead>
+        <tbody class="base-tbl__body">
+            <tr class="base-tbl__data-row horses-tbl__data-row"
+                *ngFor="let start of sortedStarts"
+                (click)="select(start)"
+                [class.selected]="marks[selectedRace.legNumber].indexOf(start.startNumber) > -1"
+                [class.selectable]="(start.scratched) || !start.scratched"
+                [class.scratched]="start.scratched">
+                <td class="base-tbl__cell--halign-right program-info--startNo">{{start.startNumber}}</td>
+                <td title="{{start.horseName}}" class="program-info--horse-displayName">{{start.horseName}}</td>
+                <td title="{{start.driver}}" class="program-info--driver-displayName">{{start.driver}}</td>
+                <td class="text-align-right program-info--ticket-percentages">
+                    {{start.investmentPercentage | prosent}}
+                </td>
+                <td class="text-align-right ng-binding program-info--ticket-winOdds">
+                    <span>{{start.odds }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

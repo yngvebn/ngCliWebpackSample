@@ -1,0 +1,13 @@
+﻿<div class="bet-cost-sm__modal">
+    <h3 class="heading-level-2 h-level--thin bet-cost-sm__modal__heading">Rekkepris</h3>
+    <p>{{description}}</p>
+    <div class="bet-cost-sm__modal__input">
+        <form name="rowPrice" #rowPriceForm="ngForm" class="bet-cost-sm__modal__input-form">
+            <input type="number" step="any" name="crp" #crp="ngModel" [(ngModel)]="customRowPrice" [pattern]="rowPriceRegex" [minlength]="0" [maxlength]="5" [maxprice]="99999" placeholder="{{selectedPriceInfo.value  | kroner : true : 0 : false }}" />
+            <button (click)="selectCustomRowPrice()" [disabled]="!rowPriceForm.valid" class="btn btn--small">Bruk</button>
+        </form>
+    </div>
+    <div class="bet-cost-sm__modal__buttons">
+        <button *ngFor="let step of stepItems" (click)="selectRowPrice(step)" class="btn btn--small btn--support">{{ getStepValue(step.value) }}</button>
+    </div>
+</div>

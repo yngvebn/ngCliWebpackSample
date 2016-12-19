@@ -1,0 +1,45 @@
+﻿<div class="c product-timeline">
+    <div class="product-timeline__container">
+        <table class="products__table">
+            <thead>
+                <tr *ngIf="productsForRaceDay.races">
+                    <th class="u-text-right">Løp:</th>
+                    <th *ngFor="let race of productsForRaceDay.races" scope="col" class="i" [ngClass]="'is-'+race.progressStatus.toLowerCase()" [class.is-moved]="race.hasBeenMoved">
+                        <pop-over [my]="'top'" [show-on]="'mouseenter'" [hide-on]="'mouseleave,click'" *ngIf="race.progressStatus === 'Ongoing' || race.progressStatus === 'Abandoned' || race.progressStatus === 'Future'" class="multiline">
+                            <div class="md-tooltip__bg" [ngClass]="{'md-tooltip__bg--highlight': race.secondsToStart <= 3600, 'md-tooltip__bg--black': race.secondsToStart > 3600}">
+                                <span [ngSwitch]="race.progressStatus">
+                                    <race-start *ngSwitchCase="'Future'" [race]="race" [minutesToShowCountdown]="60"></race-start>
+                                    <span *ngSwitchCase="'Ongoing'">
+                                        Pågår!
+                                    </span>
+                                    <span *ngSwitchCase="'Abandoned'">
+                                        Avlyst!
+                                    </span>
+                                </span>
+                            </div>
+                        </pop-over>
+                        <span class="sr-only">Løp</span>
+                        {{race.raceNumber}}
+                        <span class="is-moved--indicator">*</span>
+                    </th>
+                    <th scope="col">
+                        <div class="product__revenue">Omsetning</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="productsForRaceDay.products">
+                <template ngFor let-item [ngForOf]="productsForRaceDay.products">
+
+                    <multi-leg-game class="product" [class.is-jackpot]="item.hasJackpot" [ngClass]="'is-'+(item.progressStatus || '').toLowerCase()" style="display:table-row" *ngIf="item.isMultiLegGame"
+                                    [productsForRaceDay]="productsForRaceDay"
+                                    [selectedRaceDay]="selectedRaceDay"
+                                    [productForTimeline]="item"></multi-leg-game>
+                    <single-leg-game *ngIf="!item.isMultiLegGame" [productForTimeline]="item" [productsForRaceDay]="productsForRaceDay" [selectedRaceDay]="selectedRaceDay" style="display:table-row"></single-leg-game>
+
+                </template>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

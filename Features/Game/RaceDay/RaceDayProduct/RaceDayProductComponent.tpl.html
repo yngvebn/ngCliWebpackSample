@@ -1,0 +1,134 @@
+﻿
+<div id="raceday-product-component" [ngClass]="['numberofstarts--'+maxNumberOfStartsForProduct, 'theme--'+product]">
+    <leg-menu [races]="productsForRaceDay.races"
+              [multiLegProduct]="multiLegProduct"
+              [selectedRaceNumber]="selectedRaceNumber"
+              (onSelectRace)="selectRace($event)"
+              *ngIf="multiLegProduct.isOpenForBet && bettingSystemIsOpenForBet"></leg-menu>
+
+    <div class="product__head">
+        <div class="product__head__info" [class.has-jackpot]="multiLegProduct.hasJackpot">
+            <img [src]="'/UI/gamelogo/logo-trans_'+product+'.svg'" [attr.alt]="product" />
+            <div class="product__head__group">
+                <div class="product__head__group">
+                    <div class="product__head__jackpot">
+                        <span *ngIf="multiLegProduct.hasJackpot && !multiLegProduct.hasBonus" class="tag tag--jackpot">Jackpot!</span>
+                        <span *ngIf="multiLegProduct.hasBonus && !multiLegProduct.hasJackpot" class="tag tag--bonus">Bonus!</span>
+                        <span *ngIf="multiLegProduct.hasBonus && multiLegProduct.hasJackpot" class="tag tag--jackpot">Jackpot og Bonus!</span>
+                    </div>
+                    <div class="product__head__item u-hide-for-medium">
+                        <span class="product__head__desc">Løp</span><span class="u-hide-for-small">: </span>
+                        <strong>
+                            <span *ngFor="let consecutiveLegs of multiLegProduct.consecutiveLegs">
+                                {{ consecutiveLegs.fromRaceNumber }}<span *ngIf="consecutiveLegs.toRaceNumber !== consecutiveLegs.fromRaceNumber">-{{ consecutiveLegs.toRaceNumber }}</span><span *ngIf="!last">, </span>
+                            </span>
+                        </strong>
+                    </div>
+                    <div class="product__head__item">
+                        <span class="product__head__desc">Start</span><span class="u-hide-for-small">: </span>
+                        <strong> {{ firstRaceInProduct.displayStartTime }}</strong>
+                    </div>
+                    <div class="product__head__item">
+                        <span class="product__head__desc">Omsetning</span><span class="u-hide-for-small">: </span>
+                        <strong> {{ multiLegProduct.totalInvestment| kroner }}</strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="product__head__tools"></div>
+    </div>
+    <div class="product__content" *ngIf="multiLegProduct.isOpenForBet && bettingSystemIsOpenForBet">
+
+        <div class="product__markings">
+            <button class="btn product__markings__toggler" (click)="toggleTicketVisibility()">
+                Kupong <!--<icon icon="down" icon-color="black" icon-size="medium"></icon>-->
+            </button>
+
+            <div class="markings-container" *ngIf="ticketVisible || uiService.isLargerThan('Small')">
+                <ticket [races]="programData.races"
+                        [multiLegProduct]="multiLegProduct"
+                        [selectedRaceNumber]="selectedRaceNumber"
+                        (onSelectRace)="selectRace($event)"
+                        (onMarkingsChange)="updateMarkings($event)"
+                        [marks]="betData.marks"></ticket>
+            </div>
+            <div class="bet-costcontainer" *medium>
+                <bet-cost [estimatedTotalPrice]="estimatedTotalPrice"
+                          [numberOfRows]="numberOfRows"
+                          [priceInfo]="priceInfoForProduct"
+                          (onSelect)="onBetCostSelected($event)"
+                          bet-method="gameWindowOptions.betMethod"
+                          bet-type-code="gameWindowOptions.betTypeCode"
+                          on-bet-cost-selected="onBetCostSelected(item, maxPrice)"
+                          closedForBetting="bettingSystemIsOpenForBet"
+                          include-fee="true"
+                          row-price-texts="{ regular: 'Rekkepris:' }"
+                          price-info="gameWindowOptions.priceInfo"
+                          disable-price-validation="true"
+                          bet-data="getCurrentBetData()"></bet-cost>
+
+
+                <div class="bet-cost__actions" ng-class="{'error': error }">
+                    <button (click)="purchase()" [disabled]="!bettingSystemIsOpenForBet || betLimitExceeded || maxAllowedCostExceeded" class="btn bet-cost__actions-btn">Kjøp</button>
+                    <button class="btn btn--link  u-text-small" (click)="resetTicket()">Nullstill</button>
+                    <span *ngIf="error" class="u-text-error">{{error}}</span>
+                </div>
+            </div>
+
+            <div class="bet-cost-sm" *small>
+                <bet-cost-mobile [priceInfo]="priceInfoForProduct"
+                                 [betData]="betData"
+                                 [estimatedTotalPrice]="estimatedTotalPrice"
+                                 (onSelect)="onBetCostSelected($event)"
+                                 [includeFee]="true"
+                                 [raceCount]="programData.races.length"
+                                 class="bet-cost-sm__rowprice"></bet-cost-mobile>
+                <div class="bet-cost-sm__action">
+                    <button (click)="purchase()" ng-disabled="!bettingSystemIsOpenForBet || betLimitExceeded  || maxAllowedCostExceeded" class="btn btn--small bet-cost-sm__actions-btn">Kjøp</button>
+                </div>
+                <span *ngIf="error" class="u-text-error">{{error}}</span>
+            </div>
+
+        </div>
+        <div class="product__start-list">
+            <program-info [selectedRace]="selectedRace"
+                          [marks]="betData.marks"
+                          (onMarkingsChange)="updateMarkings($event)"></program-info>
+
+        </div>
+    </div>
+
+
+    <router-outlet></router-outlet>
+    <div class="tabs-container">
+    <div *ngIf="isTabForOddsVisible" class="tabs">
+        <a (click)="selectTab('program')" class="tabs__item" [class.selected]="!selectedTab || selectedTab === 'program'">Program</a>
+        <a (click)="selectTab('odds')" class="tabs__item" [class.selected]="selectedTab === 'odds'">Odds</a>
+    </div>
+
+    <div id="ddOdds" *ngIf="selectedTab === 'odds'">
+        <double-odds-large [programData]="programData"
+                           [startTime]="firstRaceInProduct.displayStartTime"></double-odds-large>
+    </div>
+
+    <div id="program" *ngIf="!selectedTab || selectedTab === 'program'">
+        <program-small *mediumDown [marks]="betData.marks"
+                       (onMarkingsChange)="updateMarkings($event)"
+                       [programData]="programData"
+                       [races]="productsForRaceDay.races"
+                       [selectedRaceNumber]="selectedRaceNumber"
+                       (onSelectRace)="selectRace($event)"
+                       ng-class="{'is-closed-for-bet': !multiLegProduct.isOpenForBet || !bettingSystemIsOpenForBet }"></program-small>
+
+        <program-large *large [marks]="betData.marks"
+                       (onMarkingsChange)="updateMarkings($event)"
+                       [programData]="programData"
+                       [races]="productsForRaceDay.races"
+                       [selectedRaceNumber]="selectedRaceNumber"
+                       (onSelectRace)="selectRace($event)"
+                       ng-class="{'is-closed-for-bet': !multiLegProduct.isOpenForBet || !bettingSystemIsOpenForBet }"></program-large>
+    </div>
+	</div>
+
+</div>

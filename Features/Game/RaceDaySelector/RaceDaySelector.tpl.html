@@ -1,0 +1,63 @@
+﻿<section class="c race-day-selector">
+    <header class="c__header c__header--flex">
+        <h3 class="h-level-3 race-day-selector__title">Baneoversikt</h3>
+        <button class="btn btn--transparent btn--smallest race-day-selector__toggler u-hide-for-large" (click)="uiService.toggleTracks()" *ngIf="uiService.hasRaceDay">
+            <icon icon="close" icon-size="medium" icon-color="neutral-light"></icon>
+        </button>
+    </header>
+    <div class="c__content" ng-if="!isBusy">
+        <div class="race-day-selector__lists">
+            <div class="active-race-days-grouped-by-date"  *ngFor="let activeRaceDaysForDate of activeRaceDaysGroupedByDate">
+                <div class="race-day-selector__headings">{{activeRaceDaysForDate.dateHeader}}</div>
+                <ul class="race-day-selector__items" id="tracks">
+                    <li class="race-day-selector__item default" *ngFor="let raceDay of activeRaceDaysForDate.poolsForRaceDay" routerLinkActive="selected">
+                        <div class="race-day-selector__link" 
+                             [ngClass]="'is-'+raceDay.progressStatus.toLowerCase()">
+                            <strong class="race-day-selector__time">{{raceDay.startTime | amDateFormat:'H:mm'}}</strong>
+                            <a [routerLink]="['/', raceDay.raceDay]" ui-sref="game.raceDay.timeline({raceDayKey: raceDay.raceDay, product: raceDay.products[0].product })" title="{{raceDay.raceDayName}}" ng-click="toggleTracks()" class="race-day-selector__name u-hide-for-medium">
+                                {{raceDay.raceDayName}}
+                                <span [ngSwitch]="raceDay.progressStatus">
+                                    <span *ngSwitchCase="Ongoing" class="race-day-selector__status race-day-selector__started">(Startet)</span>
+                                    <span *ngSwitchCase="Abandoned" class="race-day-selector__status race-day-selector__abandoned">(Avlyst)</span>
+                                    <span *ngSwitchCase="Finished" class="race-day-selector__status race-day-selector__finished">(Avsluttet)</span>
+                                </span>
+                            </a>
+                            <a [routerLink]="['/', raceDay.raceDay]" ui-sref="game.raceDay.timeline({raceDayKey: raceDay.raceDay, product: raceDay.products[0].product })" title="{{raceDay.raceDayName}}" class="race-day-selector__name u-hide-for-small">
+                                {{raceDay.raceDayName}}
+                                <span [ngSwitch]="raceDay.progressStatus">
+                                    <span *ngSwitchCase="Ongoing" class="race-day-selector__status race-day-selector__started">(Startet)</span>
+                                    <span *ngSwitchCase="Abandoned" class="race-day-selector__status race-day-selector__abandoned">(Avlyst)</span>
+                                    <span *ngSwitchCase="Finished" class="race-day-selector__status race-day-selector__finished">(Avsluttet)</span>
+                                </span>
+                            </a>
+                            
+                            <div class="race-day-selector__tags">
+                                <span *ngFor="let pool of raceDay.products;  let i=index">
+<!--TODO: Find replacement-->
+                                    <!--<md-tooltip md-direction="top" ng-if="pool.hasJackpot || pool.hasBonus">
+                                        <span ng-if="pool.hasJackpot">
+                                            Jackpot
+                                        </span>
+                                        <span ng-if="pool.hasBonus">
+                                            Bonus
+                                        </span>
+                                    </md-tooltip>-->
+                                    <a href="" *ngIf="i<4" [routerLink]="['/', raceDay.raceDay, pool.product]" class="tag" 
+                                       [class.disabled]="!pool.isOpenForBet || pool.isAbandoned"
+                                       [class.tag--jackpot]="pool.hasJackpot || pool.hasBonus">{{pool.product | presentProductAsShortText}}</a>
+                                </span>
+                            </div>
+                            <a [routerLink]="['/', raceDay.raceDay]" class="race-day-selector__arrow" aria-hidden="true">
+                                <icon icon="right" icon-size="small" icon-color="neutral-light"></icon>
+                                <span class="sr-only">Gå til bane</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div *ngIf="!activeRaceDaysGroupedByDate || !activeRaceDaysGroupedByDate.length">
+                <div class="race-day-selector__headings">Ingen tilgjengelige baner</div>
+            </div>
+        </div>
+    </div>
+</section>

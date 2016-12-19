@@ -2,39 +2,45 @@ var wallabyWebpack = require('wallaby-webpack');
 
 var webpackPostprocessor = wallabyWebpack({
   entryPatterns: [
-    'src/wallabyTest.js',
-    'src/**/*spec.js'
+    'Features/wallabyTest.js',
+    'Features/**/*spec.js'
   ],
 
   module: {
     loaders: [
-      {test: /\.css$/, loader: 'raw-loader'},
-      {test: /\.html$/, loader: 'raw-loader'},
-      {test: /\.js$/, loader: 'angular2-template-loader', exclude: /node_modules/},
-      {test: /\.json$/, loader: 'json-loader'},
-      {test: /\.styl$/, loaders: ['raw-loader', 'stylus-loader']},
-      {test: /\.less$/, loaders: ['raw-loader', 'less-loader']},
-      {test: /\.scss$|\.sass$/, loaders: ['raw-loader', 'sass-loader']},
-      {test: /\.(jpg|png)$/, loader: 'url-loader?limit=128000'}
+      { test: /\.css$/, loader: 'raw-loader' },
+      { test: /\.html$/, loader: 'raw-loader' },
+      { test: /\.js$/, loader: 'angular2-template-loader', exclude: /node_modules/ },
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.styl$/, loaders: ['raw-loader', 'stylus-loader'] },
+      { test: /\.less$/, loaders: ['raw-loader', 'less-loader'] },
+      { test: /\.scss$|\.sass$/, loaders: ['raw-loader', 'sass-loader'] },
+      { test: /\.(jpg|png)$/, loader: 'url-loader?limit=128000' }
     ]
+  },
+  resolve: {
+    modules: ['node_modules']
+  },
+  node: {
+    fs: "empty"
   }
 });
 
-var compilerOptions = require('./src/tsconfig.json').compilerOptions;
+var compilerOptions = require('./Features/tsconfig.json').compilerOptions;
 
 module.exports = function (wallaby) {
 
   return {
     files: [
-      {pattern: 'src/**/*.ts', load: false},
-      {pattern: 'src/**/*.d.ts', ignore: true},
-      {pattern: 'src/**/*.css', load: false},
-      {pattern: 'src/**/*.html', load: false},
-      {pattern: 'src/**/*spec.ts', ignore: true}
+      { pattern: 'Features/**/*.ts', load: false },
+      { pattern: 'Features/**/*.d.ts', ignore: true },
+      { pattern: 'Features/**/*.css', load: false },
+      { pattern: 'Features/**/*.html', load: false },
+      { pattern: 'Features/**/*spec.ts', ignore: true }
     ],
 
     tests: [
-      {pattern: 'src/**/*spec.ts', load: false}
+      { pattern: 'Features/**/*spec.ts', load: false }
     ],
 
     testFramework: 'jasmine',

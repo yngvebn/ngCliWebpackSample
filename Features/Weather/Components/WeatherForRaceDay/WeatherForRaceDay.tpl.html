@@ -1,0 +1,7 @@
+﻿<div class="weather weather--large" *ngIf="weather">
+    <a [href]="weather.url">
+        <img [src]="'/UI/weather/'+weather.symbol+'.svg'" class="weather__symbol" [attr.alt]="weather.description" [attr.title]="weather.description" aria-hidden="hidden"/>
+    </a>
+    <span class="sr-only">{{weather.description}}</span>
+    <span>{{weather.temperature}}°C</span>
+</div>

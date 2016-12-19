@@ -1,0 +1,16 @@
+﻿<h3 class="u-text-strong">Resultatvarsel</h3>
+
+<div *ngIf="prizeNotificationSettings" ng-cloak>
+    <span [ngSwitch]="notificationPreference">
+        <span *ngSwitchCase="emailAndSms">Du har valgt resultatvarsel på epost og SMS (kun gevinst).</span>
+        <span *ngSwitchCase="onlyEmail">Du har valgt resultatvarsel på epost.</span>
+        <span *ngSwitchCase="onlySms">Du har valgt resultatvarsel på SMS (kun gevinst).</span>
+        <span *ngSwitchCase="none">Du har ikke valgt å motta resultatvarsel.</span>
+
+
+        <span *ngIf="!prizeNotificationSettings.hasRegisteredEmail">Du har ikke registrert epost</span>
+        <span *ngIf="!prizeNotificationSettings.hasRegisteredMobile">Du har ikke registrert mobilnummer</span>
+
+        <a href="" [href]="prizeNotificationSettings.myPageUrl" target="_blank">Endre innstillinger i din profil</a>
+    </span>
+</div>

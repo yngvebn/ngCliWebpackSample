@@ -1,0 +1,24 @@
+﻿
+<table class="latest-races">
+    <thead class="latest-races__thead">
+        <tr>
+            <th class="u-text-left">Kusk</th>
+            <th class="u-text-center">Bane</th>
+            <th class="u-text-right">Dato</th>
+            <th class="u-text-right">Dist.</th>
+            <th class="u-text-center">Plass</th>
+            <th class="u-text-right">Tid</th>
+            
+        </tr>
+    </thead>
+    <tbody *ngFor="let formRow of formRows" class="latest-races__race">
+        <tr class="latest-races__details">
+            <td class="u-text-left">{{formRow.driver}}</td>
+            <td class="u-text-center">{{formRow.trackCode}}</td>
+            <td class="u-text-right">{{formRow.raceDate | amDateFormat:'DD/MM'}}</td>
+            <td class="u-text-right">{{formRow.distance}}</td>
+            <td class="u-text-center"><strong>{{formRow.place}}</strong></td>
+            <td class="u-text-right">{{formRow.time}}</td>
+        </tr>
+    </tbody>
+</table>

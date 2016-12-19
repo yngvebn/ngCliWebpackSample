@@ -1,0 +1,3 @@
+﻿interface IRaceDayComponentStateParams {
+    raceDayKey: string;
+}

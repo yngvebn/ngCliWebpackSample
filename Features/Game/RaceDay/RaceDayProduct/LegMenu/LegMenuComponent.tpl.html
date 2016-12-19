@@ -1,0 +1,17 @@
+﻿<div class="leg-menu">
+    <table class="base-tbl leg-menu-tbl">
+        <tbody>
+            <tr class="leg-menu-tbl__races">
+                <th>Løp</th>
+                <td [class.selected]="item.number === selectedRaceNumber"
+                    [class.selectable]="item.legAvailable"
+                    [class.openForBet]="multiLegProduct.isOpenForBet"
+                    (click)="validateAndSelectRace(item.race)" 
+                    *ngFor="let item of viewModel.items">
+                    <span>{{item.number}}</span>
+                </td>
+                <td class="leg-menu-tbl__filler">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

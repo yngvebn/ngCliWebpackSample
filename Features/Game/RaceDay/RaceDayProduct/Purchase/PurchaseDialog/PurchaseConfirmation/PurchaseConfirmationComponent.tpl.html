@@ -1,0 +1,48 @@
+﻿<div class="purchase-confirm">
+    <h3 class="heading-level-2 h-level--thin purchase-confirm__heading">
+        {{programData.product}} {{selectedRaceDay.raceDayName}}
+        <span>{{firstRaceInProduct.startTime | amDateFormat:'DD.MM'}} kl. {{firstRaceInProduct.startTime | amDateFormat:'HH:mm'}}</span>
+    </h3>
+    <div class="purchase-confirm__tablecontainer">
+        <table class="purchase-confirm__table">
+            <thead>
+                <tr>
+                    <th>Avd</th>
+                    <th>Markeringer</th>
+                    <th>Antall</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let race of summary.races">
+                    <td>{{race.legNumber}}</td>
+                    <td>
+                        <span *ngFor="let mark of race.marks" ng-class="{'scratched': mark.scratched}">
+                            {{mark.mark}}<span *ngIf="race.marks.length > 1 && !last">, </span> <span *ngIf="race.marks.length === 1"> {{mark.horseName}}</span>
+                        </span>
+                    </td>
+                    <td>{{race.markCount}}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">{{summary.numberOfRows}} rekker á {{betDataObj.rowPrice | kroner }} + bongavgift {{summary.estimatedFee | kroner }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="newScratches.length"  class="purchase-confirm__changes">
+        <h3>Løpsendring!</h3>
+        <div *ngFor="let start of newScratches">Startnummer {{start.startNumber}} i {{raceToLegNumber[start.raceNumber]}}. avd er strøket.</div>
+    </div>
+    <h3 class="purchase-confirm__total-cost">Totalt {{ summary.totalCost | kroner : false : true }}</h3>
+    <div class="purchase-confirm__action">
+        <button class="btn" (click)="purchase()" [disabled]="isPurchaseInProgress" >
+            <!--<md-progress-circular *ngIf="isPurchaseInProgress" class="md-hue-2" md-diameter="20px"></md-progress-circular>-->
+            <span *ngIf="!isPurchaseInProgress">Betal med spillkonto</span>
+        </button>
+        <button class="btn btn--white" [routerLink]="['..']" ui-sref="game.raceDay.product({ raceDayKey: programData.raceDay, product: programData.product})">Endre kupong</button>
+    </div>
+    <div class="purchase-confirm__footer" *ngIf="customerSupportLinks" >
+        <div *ngFor="let link of customerSupportLinks">
+            <a [href]="link.href" [target]="link.target" class="purchase-confirm__footerlink">{{link.title}}</a>
+        </div>
+    </div>
+</div>

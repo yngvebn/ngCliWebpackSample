@@ -1,0 +1,33 @@
+﻿<th class="product__title" [ngClass]="'product__title__'+productForTimeline.product" [class.product__title__gallop]="selectedRaceDay.sportType === 'G'" scope="row">
+    <button class="product__btn product__title__text" disabled="disabled">{{productForTimeline.product | presentProductAsShortText}}</button>
+</th>
+<template ngFor let-item [ngForOf]="productsForRaceDay.races">
+    <td [ngClass]="'is-'+item.progressStatus.toLowerCase()"
+        [class.is-singleleg]="hasSingleLegGame(item.raceNumber, productForTimeline)"
+        [class.is-empty]="!hasSingleLegGame(item.raceNumber, productForTimeline)" [class.is-moved]="item.hasBeenMoved">
+        <!--TODO: Find replacement-->
+        <!--<md-tooltip md-direction="top" md-delay="250" ng-repeat-start="singleLegGame in [ctrl.getSingleLegGameRace(race.raceNumber, productForTimeline)]" *ngIf="singleLegGame" class="multiline md-tooltip--black u-is-hidden">
+            <div class="md-tooltip__bg md-tooltip__bg--black">
+                <div *ngIf="singleLegGame.isSuper" class="u-text-bold u-text-center" ng-class="{'u-text-highlight': singleLegGame.hasJackpot}">Supertrippel</div>
+                <div class="u-text-center">
+                    <span *ngIf="singleLegGame.hasBonus" class="u-text-bold" ng-class="{'u-text-highlight': singleLegGame.hasJackpot}">Bonus</span>
+                    <span *ngIf="singleLegGame.hasJackpot && singleLegGame.hasBonus"> og </span>
+                    <span *ngIf="singleLegGame.hasJackpot" class="u-text-highlight u-text-bold">Jackpot</span>
+                </div>
+                <div class="u-text-center">
+                    <span *ngIf="race.progressStatus === 'Future' || race.progressStatus === 'Ongoing'">Start&nbsp;{{race.displayStartTime}}</span>
+                    <span *ngIf="singleLegGame.totalInvestment && investment > 0" ng-repeat="(product, investment) in singleLegGame.totalInvestment as allProducts">
+                        Omsetning <span *ngIf="ctrl.hasMultipleInvestments(singleLegGame)">&nbsp;{{product | presentProductAsText}}</span>&nbsp;{{investment | kroner : true : false}}
+                    </span>
+                </div>
+            </div>
+        </md-tooltip>-->
+        <button href="#" class="product__btn product__btn--singlegame" *ngIf="singleLegGameRaces[item.raceNumber]" ng-disabled="item.progressStatus !== 'Future'" ng-class="{'is-super' : singleLegGameRaces[item.raceNumber].isSuper}">
+            <span *ngIf="!singleLegGameRaces[item.raceNumber].isSuper"><span class="sr-only">Spill på løp</span> {{singleLegGameRaces[item.raceNumber].raceNumber}}</span>
+            <span class="product__btn__extra" *ngIf="singleLegGameRaces[item.raceNumber].isSuper" ng-class="{'u-text-highlight': singleLegGameRaces[item.raceNumber].hasJackpot}">S<span class="sr-only">Super løp {{item.raceNumber}}</span></span>
+        </button>
+    </td>
+</template>
+<td [ngClass]="'product__revenues product__revenue__'+productForTimeline.product">
+    <div class="product__revenue"><span *ngIf="productForTimeline.races.length === 1">{{getTotalInvestment(productForTimeline.product) | kroner : true : 0 : true }}</span></div>
+</td>

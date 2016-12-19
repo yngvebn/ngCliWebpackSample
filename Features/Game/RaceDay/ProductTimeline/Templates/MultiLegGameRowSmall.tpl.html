@@ -1,0 +1,33 @@
+﻿<div class="products-list">
+    <div class="products-list__row" [class.is-jackpot]="productForTimeline.hasJackpot">
+        <div class="products-list__action  product__title"
+             [class.product__title__gallop]="selectedRaceDay.sportType === 'G'"
+             [ngClass]="'product__title__'+productForTimeline.product">
+            <button class="btn btn--small btn--transparent u-display-block u-text-center" [routerLink]="['./', productForTimeline.product]"
+                    [class.u-text-highlight]="productForTimeline.hasJackpot">
+                {{productForTimeline.product}}
+            </button>
+        </div>
+        <div class="products-list__details" [class.is-jackpot]="productForTimeline.hasJackpot">
+            <strong class="products-list__bonus" *ngIf="productForTimeline.hasBonus && !productForTimeline.hasJackpot">Bonus! </strong>
+            <strong class="products-list__bonus" *ngIf="!productForTimeline.hasBonus && productForTimeline.hasJackpot">Jackpot! </strong>
+            <strong class="products-list__bonus" *ngIf="productForTimeline.hasBonus && productForTimeline.hasJackpot">Jackpot og Bonus! </strong>
+
+            <div class="products-list__time">
+                {{getMultiLegGameStartTime(productForTimeline) | amDateFormat:'HH:mm'}}
+            </div>
+
+            <div class="products-list__racenumbers">
+                <span *ngFor="let consecutiveLegs of productForTimeline.consecutiveLegs">
+                    {{ consecutiveLegs.fromRaceNumber }}<span *ngIf="consecutiveLegs.toRaceNumber !== consecutiveLegs.fromRaceNumber">-{{ consecutiveLegs.toRaceNumber }}</span><span *ngIf="!last">, </span>
+                </span>
+            </div>
+
+            <div class="products-list__revenue">
+                {{productForTimeline.totalInvestment | kroner : true : 0}}
+            </div>
+        </div>
+        <div class="products-list__expander"></div>
+    </div>
+</div>
+

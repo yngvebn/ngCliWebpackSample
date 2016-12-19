@@ -1,0 +1,30 @@
+﻿<div class="main-header-usr not-loggedin" *ngIf="!isLoggedIn">
+    <button (click)="openLoginDialog()" class="btn btn--smallest btn--profile main-header-usr__action">Logg inn</button>
+    <button (click)="redirectToRegistration()" class="btn btn--smallest main-header-usr__action">Ny bruker</button>
+</div>
+
+<div class="main-header-usr" *ngIf="isLoggedIn" [ngClass]="{ 'is-open': displayDetails }">
+    <button class="btn btn--transparent u-padded-quart u-text-right u-display-block" (click)="toggleDetails()">
+        <span class="main-header-usr__item__username">{{user.username}}</span>
+        <!--<icon icon="down" icon-color="white" icon-size="small"></icon>-->
+    </button>
+    <div class="main-header-usr__extra-content">
+        <div *ngIf="!credit" class="main-header-usr__item">
+            <!--<md-progress-circular class="md-hue-2" md-diameter="20px"></md-progress-circular>-->
+        </div>
+        <div *ngIf="credit" style="display: inline">
+            <div class="main-header-usr__item">
+                Disponibelt: <a href="" [href]="depositUrl" (click)="$event.preventDefault()" target="popup" onClick="window.open(this.href + '?returnurl=beta', '', 'width=740,height=400,scrollbars=no,resizable=no')"><strong id="balance">{{credit.balance | kroner : false : true }}</strong></a>
+            </div>
+            <div class="main-header-usr__item">
+                Grense for spill: <a id="betlimit" [href]="betLimitUrl" href target="_blank"><strong>{{credit.remainingBetLimit | kroner : false : true }}</strong></a>
+            </div>
+            <div class="main-header-usr__item" id="numberofgames">
+                Innleverte spill: {{numberOfActiveGames}}
+            </div>
+        </div>
+        <div class="main-header-usr__item">
+            <span><button id="logout" (click)="logout()" class="btn btn--smallest">Logg ut</button></span>
+        </div>
+    </div>
+</div>

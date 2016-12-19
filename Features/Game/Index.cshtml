@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Spill";
+    ViewBag.PageName = "Spill";
+}
+
+<div class="p p--white u-flex-grow p--main">
+    <game-root>
+        <div class="page-loader">
+            <style>
+                @@keyframes loadingspinner {
+                    0% { transform: rotateZ(0); }
+                    50% { }
+                    100% {transform: rotateZ(720deg);}
+                }
+
+                @@keyframes loadingdash {
+                    0% {stroke-dasharray: 0 95;}
+                    50% {stroke-dasharray: 95 0;}
+                    100% {stroke-dasharray: 0 95;}
+                }
+
+                .page-loader { display: flex; justify-content: center; align-items: center; position: fixed; top: 0; right: 0; bottom: 50%; left: 0; z-index: 1100;}
+                .loader__svg { transform-origin: center;}
+                .loader__svg svg { animation: loadingspinner 1s infinite linear; transform-origin: 50% 50%; vertical-align: middle; }
+                .loader__svg svg path { fill: none; stroke-width: 7;}
+                .loader__svg svg path.loader-bg { stroke: rgba(255,255,255,.2);}
+                .loader__svg svg path.loader-line { stroke-dasharray: 50 100; transform-origin: center; stroke-width: 5; animation: loadingdash 2s infinite linear; stroke: #ddd;}
+            </style>
+            <span class="loader">
+                <span class="loader__svg">
+                    <svg class="ip-inner" width="60px" height="60px" viewBox="0 0 40 40">
+                        <path class="loader-bg" d="M35,20c0,8.3-6.7,15-15,15S5,28.3,5,20S11.7,5,20,5S35,11.7,35,20z" />
+                        <path id="ip-loader-line" class="loader-line" d="M35,20c0,8.3-6.7,15-15,15S5,28.3,5,20S11.7,5,20,5S35,11.7,35,20z" />
+                    </svg>
+                </span>
+            </span>
+        </div>
+    </game-root>
+</div>
+@section pageScripts{
+    @Scripts.Render("~/bundles/app/game")
+}

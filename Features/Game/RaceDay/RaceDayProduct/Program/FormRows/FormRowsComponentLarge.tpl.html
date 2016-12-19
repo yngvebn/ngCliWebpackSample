@@ -1,0 +1,41 @@
+﻿<table class="latest-races">
+    <thead class="latest-races__thead">
+        <tr>
+            <th class="latest-races__driver">Kusk</th>
+            <th class="latest-races__trackcode">Bane</th>
+            <th class="latest-races__date">
+                <!--TODO: Replace or fix -->
+                <!--<md-tooltip md-direction="top">
+                    DD.MM.ÅÅ - Løp | Spor
+                </md-tooltip>-->
+                Dato
+            </th>
+            <th class="latest-races__startnumber">Startnr.</th>
+            <th class="latest-races__distance">Distanse</th>
+            <th class="latest-races__place">Plass</th>
+            <th class="latest-races__time">Tid</th>
+            <th class="latest-races__odds">Odds</th>
+            <th class="latest-races__first-prize">
+                <!--<md-tooltip md-direction="top">
+                   1. premie i løpet
+                </md-tooltip>-->
+                Premie
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let formRow of formRows;trackBy $index" class="latest-races__race">
+        <tr class="latest-races__details">
+            <td class="latest-races__driver">{{formRow.driver}}</td>
+            <td class="latest-races__trackcode">{{formRow.trackCode}}</td>
+            <td class="latest-races__date">{{formRow.raceDate | amDateFormat:'DD.MM.YY'}} - {{formRow.raceNumber}} | {{formRow.postposition}}<span *ngIf="formRow.monte">m</span></td>
+            <td class="latest-races__startnumber">{{formRow.startNumber}}</td>
+            <td class="latest-races__distance">{{formRow.distance}}</td>
+            <td class="latest-races__place"><strong>{{formRow.place}}</strong></td>
+            <td class="latest-races__time">{{formRow.time}}</td>
+            <td class="latest-races__odds">{{formRow.winOdds}}<span *ngIf="formRow.favorite">*</span></td>
+            <td class="latest-races__first-prize">{{formRow.firstPrize}}</td>
+            <td class="latest-races__comment"></td>
+        </tr>
+    </tbody>
+</table>

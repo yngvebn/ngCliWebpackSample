@@ -1,0 +1,11 @@
+﻿<div class="purchase-receipt">
+    <h1 class="heading-level-2 h-level--thin purchase-confirm__heading">Spill levert</h1>
+    <p>TSN-nummer: {{purchaseReceipt.ticketSerialNumber}}</p>
+    
+    <prize-notification></prize-notification>
+
+    <div class="purchase-receipt__actions">
+        <button class="btn" [routerLink]="['..']">{{'Nytt '+purchaseReceipt.product+'-spill'}}</button>
+        <button class="btn" [routerLink]="['../..']">Velg spill</button>
+    </div>
+</div>

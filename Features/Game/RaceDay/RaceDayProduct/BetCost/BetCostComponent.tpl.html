@@ -1,0 +1,18 @@
+﻿<div class="bet-cost clearfix">
+    <div>
+        <div class="bet-cost__number-of-rows">
+            <label>Ant. rekker:&nbsp;<span class="rows">{{numberOfRows}}</span></label>
+        </div>
+        <div class="bet-cost__amount-selector">
+            <label class="float-left">Rekkepris:</label>
+            <editable-select *ngIf="!rowpriceReadonly" class="select-list"
+                             [items]="priceViewModel.displayItems"
+                             [selectedItem]="priceViewModel.defaultSelection"
+                             (onSelect)="selectPrice($event)"></editable-select>
+        </div>
+        <div class="bet-cost__ticket-sum">
+            <label>Sum </label>
+            <span class="amount">{{getEstimatedPrice() | kroner:false:2}}</span><span class="fee-info">(inkl. avgift)</span>
+        </div>
+    </div>
+</div>
